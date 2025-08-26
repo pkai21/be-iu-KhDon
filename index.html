@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dành choa Nàng chính</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: radial-gradient(circle at top left, #fff0f5, #ffeaf4);
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .gif {
+      width: 200px;
+      height: 200px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,.1);
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      transform: scale(1);
+    }
+
+    #noBtn {
+      background: #f1f1f1;
+      color: #333;
+      transform: scale(1);
+    }
+
+    /* popup */
+    .popup {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(0,0,0,.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .popup.show { opacity: 1; pointer-events: auto; }
+    .popup .box {
+      width: min(400px, 90vw);
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      animation: pop .25s ease;
+    }
+    @keyframes pop {
+      from { transform: scale(.9); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .popup h2 { margin: 0 0 12px; color: #ff4d6d; }
+    .popup p { margin: 0 0 18px; color: #666; }
+    .popup button {
+      background: #ff4d6d;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 999px;
+    }
+
+    /* hearts + ảnh bay */
+    .hearts {
+      position: fixed; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .heart, .photo {
+      position: absolute;
+      animation: rise linear forwards;
+    }
+    .heart {
+      width: 14px; height: 14px;
+      transform: rotate(45deg);
+      background: #ff4d6d;
+      opacity: .75;
+    }
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: inherit;
+    }
+    .heart::before { left: -7px; top: 0; }
+    .heart::after  { top: -7px; left: 0; }
+
+    .photo {
+      border-radius: 50%; /* avatar tròn */
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    @keyframes rise {
+      from { transform: translateY(40px) scale(.8); opacity: 0; }
+      15% { opacity: .9; }
+      to   { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- nền tim + ảnh -->
+  <div class="hearts" id="hearts"></div>
+
+  <!-- ảnh gif -->
+  <img class="gif" src="https://media.giphy.com/media/SVkhYVCi8fKPKvypi6/giphy.gif" alt="cute cat"/>
+
+  <h1>Nàng chính của Pkai ơiii, vợ iuu đừng giựn anh nhữa nhaaa 💖</h1>
+  <div class="buttons">
+    <button id="yesBtn">Dạ iuu anhh 💕</button>
+    <button id="noBtn">Hongg thèm 😝</button>
+  </div>
+
+  <!-- popup -->
+  <div class="popup" id="popup">
+    <div class="box">
+      <h2>Yêu em 3000! 🥰</h2>
+      <p>Anh hứa sẽ không làm em buồn nữa đâu, vợ iuuu~</p>
+      <button id="okBtn">Okii nè 💖</button>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const popup = document.getElementById("popup");
+    const okBtn = document.getElementById("okBtn");
+
+    const yesTexts = ["Dạ iuu anhh💕","Thiệt đó 😍","Yêu lắm 🥰","Không thoát được đâu 😉","Chồng iu Pkai số 1 của em 😘"];
+    const noTexts  = ["Hongg thèm  😝","Hongg nha 🙄","Nghĩ lại ikk mòa 🤔","Đừng ép em 😆","Xê gaaa 😭"];
+
+    let clickCount = 0;
+
+    noBtn.addEventListener("click", () => {
+      clickCount++;
+
+      let currentYesScale = parseFloat(yesBtn.style.transform.replace("scale(", "").replace(")", "")) || 1;
+      yesBtn.style.transform = `scale(${currentYesScale + 0.6})`;
+
+      let currentNoScale = parseFloat(noBtn.style.transform.replace("scale(", "").replace(")", "")) || 1;
+      noBtn.style.transform = `scale(${Math.max(currentNoScale - 0.1, 0.3)})`;
+
+      yesBtn.textContent = yesTexts[clickCount % yesTexts.length];
+      noBtn.textContent = noTexts[clickCount % noTexts.length];
+    });
+
+    yesBtn.addEventListener("click", () => {
+      popup.classList.add("show");
+      for (let i=0; i<20; i++) {
+        setTimeout(spawnHeart, i*100);
+      }
+      // spawn nhiều ảnh luôn
+      for (let i=0; i<3; i++) {
+        setTimeout(spawnPhoto, i*500);
+      }
+    });
+
+    okBtn.addEventListener("click", () => {
+      popup.classList.remove("show");
+    });
+
+    const root = document.getElementById("hearts");
+    function spawnHeart() {
+      const h = document.createElement("div");
+      h.className = "heart";
+      const size = 10 + Math.random() * 10;
+      h.style.width = size + "px";
+      h.style.height = size + "px";
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.bottom = "-20px";
+      h.style.animationDuration = 4 + Math.random() * 4 + "s";
+      root.appendChild(h);
+      setTimeout(() => h.remove(), 8000);
+    }
+    setInterval(spawnHeart, 600);
+
+    // danh sách ảnh bạn muốn bay
+    const photos = ["my1.jpg", "my2.jpg", "my3.jpg", "my4.jpg"]; // thay bằng tên ảnh của bạn
+
+    function spawnPhoto() {
+      const img = document.createElement("img");
+      img.className = "photo";
+      // random ảnh trong mảng
+      img.src = photos[Math.floor(Math.random() * photos.length)];
+      const size = 40 + Math.random() * 40;
+      img.style.width = size + "px";
+      img.style.height = size + "px";
+      img.style.left = Math.random() * 100 + "vw";
+      img.style.bottom = "-20px";
+      img.style.animationDuration = 6 + Math.random() * 4 + "s";
+      root.appendChild(img);
+      setTimeout(() => img.remove(), 10000);
+    }
+
+    // cho nhiều ảnh bay random theo thời gian
+    setInterval(spawnPhoto, 4000);
+  </script>
+
+</body>
+</html>
